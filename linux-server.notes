@@ -59,3 +59,25 @@
    /dev/mapper/server-myhome 	20	1800000 2000000	5	0	0
    [~]# edquota -p maqj2 maqj3
    [~]# repquota -au
+
+3. chkconfig
+   [~]# LANG=C chkconfig --list | grep '3:on'
+   [~]# chkconfig autofs off
+   [~]# /etc/init.d/autofs stop
+
+4. ACL
+   [~]# setfacl -m u:maqj:rx /home/maqj/sharefolder
+   [~]# setfacl -m u:maqj4:- /home/maqj/sharefolder
+   [~]# getfacl /home/maqj/sharefoler
+   getfacl: Removing leading '/' from absolute path names
+   # file: home/maqj/sharefolder/
+   # owner: maqj1
+   # group: testgroup
+   # flags: -s-
+   user::rwx
+   user:maqj:r-x
+   user:maqj4:---
+   group::rwx
+   mask::rwx
+   other::---
+
