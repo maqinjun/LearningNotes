@@ -1,0 +1,47 @@
+1. Extend LVM
+   # 1-step 
+   [~]# vgdisplay
+   --- Volume group ---
+   VG Name	server
+   ...
+   VG Size	4.88 GiB
+   ...
+
+   # 2-step
+   [~]# fdisk /dev/sda
+   Command (m for help): n
+   First cylinder (1173-3264, dfault 1173):1940
+   Last cylinder, +cylinders or +size{K,M,G} (1940-3264,default 3264):+2G
+
+   Command (m for help):t
+   Partition number (1-9):9
+   Hex code (type L to list codes):8e <== Attention
+
+   Command (m for help):w
+   [~]# partprobe
+   
+   # 3-step Add /dev/sda9 to PV, and add PV to VG(server).
+   [~]# pvcreate /dev/sda9
+   [~]# vgextend server /dev/sda9
+   [~]# vgdisplay
+   ...
+   VG Size	6.88 GiB
+   ...
+   Free PE / Size	513 / 2.00 GiB
+   ...
+
+   # 4-step Extend /home.
+   [~]# lvdisplay
+   --- Logical volume ---
+   LV Name	/dev/server/myhome
+   ...
+   LV Size	4.88 GiB
+   [~]# lvresize -L 6.88G /dev/server/myhome
+
+   # 5-step Extend file system.
+   [~]# resize2fs /dev/server/myhome
+
+   [~]# df -h
+   ...
+   /dev/mapper/server-myhome	6.88G 140M	6.4	3% /home
+   ...
