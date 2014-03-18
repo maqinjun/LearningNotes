@@ -45,3 +45,17 @@
    ...
    /dev/mapper/server-myhome	6.88G 140M	6.4	3% /home
    ...
+
+2. Quota opertation.
+   [~]# vim /etc/fstab
+   ...
+   /dev/mapper/server-myhome /home	ext4	defaults,usrquota,grpquota	1	2
+   ...
+   [~]# umount /home;mount -a
+   [~]# quotacheck -avug
+   [~]# quotaon -avug
+   [~]# edquota -u maqj1
+   Filesystem			blocks	soft	hard	inodes	soft	hard
+   /dev/mapper/server-myhome 	20	1800000 2000000	5	0	0
+   [~]# edquota -p maqj2 maqj3
+   [~]# repquota -au
